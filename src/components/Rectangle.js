@@ -1,7 +1,7 @@
 var EventEmitter = require('events');
 
 class Rectangle extends EventEmitter {
-    constructor(canvas, f) {
+    constructor(canvas) {
         super()
         this.canvas = canvas;
         this.className = 'Rectangle';
@@ -10,11 +10,12 @@ class Rectangle extends EventEmitter {
         this.origY = 0;
         this.activeObj = null;
         this.bindEvents();
-        this.f = f;
         this.currentObject = null;
         this.rectNumb = 0;
         this.hoverTarget = false;
         document.addEventListener('keydown', this.handleKey.bind(this), false)
+
+        this.instructionText = null;
     }
 
     bindEvents() {
@@ -33,10 +34,26 @@ class Rectangle extends EventEmitter {
 
         this.canvas.on('mouse:over', (e) => {
             if (e.target.lockMovementX) {
+
                 this.hoverTarget = true;
                 this.currentObject = e.target;
-                e.target.set('fill', 'red');
-                e.target.opacity = 0.3;
+                e.target.set('fill', '#f28e65');
+                e.target.opacity = 0.4;
+
+                this.instructionText = new fabric.Text('Press R To Remove', {
+                    left: e.target.left,
+                    top: e.target.top - 15,
+                    fontSize: 13,
+                    fontWeight: 'bold',
+                    fontFamily: 'Solway',
+                    fill: 'white',
+                    backgroundColor: 'black',
+                    
+                })
+                
+                
+                this.canvas.add(this.instructionText)
+                
                 this.canvas.renderAll();
             } else {
                 return
@@ -54,6 +71,7 @@ class Rectangle extends EventEmitter {
             e.target.set('fill', 'transparent');
             this.canvas.renderAll();   
             this.hoverTarget = false
+            this.canvas.remove(this.instructionText)
         });
 
     }
@@ -62,6 +80,7 @@ class Rectangle extends EventEmitter {
         if (key.key == "r" && this.hoverTarget) {
             
             this.canvas.remove(this.currentObject)
+            this.canvas.remove(this.instructionText)
             this.emit('remove', this.currentObject.name)
         } else {
         }

@@ -8,6 +8,7 @@
 <script>
 const f = require("fabric");
 import Rectangle from "./Rectangle";
+
 export default {
   name: "HelloWorld",
   props: {
@@ -19,8 +20,11 @@ export default {
     };
   },
   mounted() {
-    let canvas = new f.fabric.Canvas("c");
-    let rect = new Rectangle(canvas, f);
+    let canvas = new f.fabric.Canvas("c", {
+      hoverCursor: 'crosshair'
+    });
+
+    let rect = new Rectangle(canvas);
     rect.on("done", data => {
       this.myRect[data.name] = data;
     });
@@ -32,6 +36,7 @@ export default {
 
     let imageSrc =
       "https://www.mydomaine.com/thmb/hFSx4r6ymYnrZWa-AFYnAnfMeKs=/700x700/smart/filters:no_upscale()/cdn.cliqueinc.com__cache__posts__273792__best-interior-design-accounts-on-instagram-273792-1543527624304-image.700x0c-82b6a3b247eb4d2a97862280e74992b3.jpg";
+
     let image = f.fabric.Image.fromURL(imageSrc, img => {
       img.selectable = false;
       canvas.setWidth(img.width);
